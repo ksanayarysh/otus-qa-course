@@ -1,15 +1,18 @@
 """
 Product page
 """
-from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 from Lesson6.selenium.models.locator import ProductPageLocators
 from Lesson6.selenium.models.page import BasePage
 
 
 class ProductPage(BasePage):
-    """Добавить продукт"""
+    """Working with Product Page """
     def add_product(self):
-        print("i'm add_product")
+        """Adding product"""
         self.press_add_button()
         self.set_product_name("Some product")
         self.set_meta_tag_title("Title")
@@ -18,93 +21,155 @@ class ProductPage(BasePage):
         self.set_price(2000)
         self.set_quantity(1000)
         self.save()
+        try:
+            WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(ProductPageLocators.SUCCESS))
+        except(NoSuchElementException, TimeoutException):
+            print("Can't add product")
+
+
 
     def press_add_button(self):
-        """Нажать кнопку +"""
-        self.driver.find_element(*ProductPageLocators.ADD).click()
+        """Press  + button"""
+        try:
+            self.driver.find_element(*ProductPageLocators.ADD).click()
+        except NoSuchElementException:
+            print("No add button")
+
 
     def set_product_name(self, product_name):
-        """Задать имя продукта"""
-        self.driver.find_element(*ProductPageLocators.PRODUCT_NAME).send_keys(Keys.CONTROL + "a")
-        self.driver.find_element(*ProductPageLocators.PRODUCT_NAME).send_keys(Keys.BACK_SPACE)
-        self.driver.find_element(*ProductPageLocators.PRODUCT_NAME).send_keys(product_name)
+        """Setting product name"""
+        try:
+            self._clear_element_(self.driver.find_element(*ProductPageLocators.PRODUCT_NAME))
+            self.driver.find_element(*ProductPageLocators.PRODUCT_NAME).send_keys(product_name)
+        except NoSuchElementException:
+            print("No name text field")
 
     def set_meta_tag_title(self, meta_tag_title):
-        """Meta title"""
-        self.driver.find_element(*ProductPageLocators.META_TAG_TITLE).send_keys(meta_tag_title)
+        """Setting meta title"""
+        try:
+            self._clear_element_(self.driver.find_element(*ProductPageLocators.META_TAG_TITLE))
+            self.driver.find_element(*ProductPageLocators.META_TAG_TITLE).send_keys(meta_tag_title)
+        except NoSuchElementException:
+            print("No meta tag")
 
-    def set_model(self, model):
-        """Model"""
-        self.driver.find_element(*ProductPageLocators.MODEL_NAME).send_keys(Keys.CONTROL + "a")
-        self.driver.find_element(*ProductPageLocators.MODEL_NAME).send_keys(Keys.BACK_SPACE)
-        self.driver.find_element(*ProductPageLocators.MODEL_NAME).send_keys(model)
+    def set_model(self, model_name):
+        """Setting model"""
+        try:
+            model = self.driver.find_element(*ProductPageLocators.MODEL_NAME)
+            self._clear_element_(model)
+            model.send_keys(model_name)
+        except NoSuchElementException:
+            print("No model name")
 
-    def set_price(self, price):
-        """Цена"""
-        self.driver.find_element(*ProductPageLocators.PRICE).send_keys(Keys.CONTROL + "a")
-        self.driver.find_element(*ProductPageLocators.PRICE).send_keys(Keys.BACK_SPACE)
-        self.driver.find_element(*ProductPageLocators.PRICE).send_keys(price)
+    def set_price(self, value):
+        """Setting price"""
+        try:
+            price = self.driver.find_element(*ProductPageLocators.PRICE)
+            self._clear_element_(price)
+            price.send_keys(value)
+        except NoSuchElementException:
+            print("No price")
 
-    def set_quantity(self, quantity):
-        """Количество"""
-        self.driver.find_element(*ProductPageLocators.QUANTITY).send_keys(Keys.CONTROL + "a")
-        self.driver.find_element(*ProductPageLocators.QUANTITY).send_keys(Keys.BACK_SPACE)
-        self.driver.find_element(*ProductPageLocators.QUANTITY).send_keys(quantity)
-
+    def set_quantity(self, value):
+        """Setting quantity"""
+        try:
+            quantity = self.driver.find_element(*ProductPageLocators.QUANTITY)
+            self._clear_element_(quantity)
+            quantity.send_keys(value)
+        except NoSuchElementException:
+            print("No quantity")
 
     def press_data(self):
-        """Нажать вкладку data"""
-        self.driver.find_element(*ProductPageLocators.DATA).click()
+        """Pressing data tab"""
+        try:
+            self.driver.find_element(*ProductPageLocators.DATA).click()
+        except NoSuchElementException:
+            print("No data tab")
 
     def save(self):
         """Нажать кнопку сохранить"""
-        self.driver.find_element(*ProductPageLocators.SAVE).click()
+        try:
+            self.driver.find_element(*ProductPageLocators.SAVE).click()
+        except NoSuchElementException:
+            print("No save button")
 
-    def find_product_by_name(self, name):
-        """Поиск продукта"""
-        self.driver.find_element(*ProductPageLocators.FILTER_NAME).send_keys(Keys.CONTROL + "a")
-        self.driver.find_element(*ProductPageLocators.FILTER_NAME).send_keys(Keys.BACK_SPACE)
-        self.driver.find_element(*ProductPageLocators.FILTER_NAME).send_keys(name)
+    def filter_product_by_name(self, name):
+        """Filter product by name"""
+        filter_field = self.driver.find_element(*ProductPageLocators.FILTER_NAME)
+        self._clear_element_(filter_field)
+        filter_field.send_keys(name)
         self.driver.find_element(*ProductPageLocators.FILTER_BUTTON).click()
 
     def get_product_quantity(self):
-        """Ищем таблицу продуктов и проверяем что в ней есть элементы"""
+        """Getting product quantity, current page """
         return len(self.driver.find_elements(*ProductPageLocators.PRODUCT_TABLE))
 
     def get_products(self):
-        """Получить список продуктов в таблице"""
+        """Getting product web elements current page"""
         return self.driver.find_elements(*ProductPageLocators.PRODUCT_TABLE)
 
 
     def get_product_names(self):
-        """Получаeм названия продуктов"""
-        if self.get_product_quantity() > 0:
-            products = self.get_products()
-            names = []
-            if len(products) > 0:
-                for product in products:
-                    names.append(product.find_elements(*ProductPageLocators.TD)[2].text)
-            return names
+        """Getting elements names"""
+        names = []
+        while True:
+            if self.get_product_quantity() > 0:
+                products = self.get_products()
+                if products:
+                    for product in products:
+                        names.append(product.find_elements(*ProductPageLocators.TD)[2].text)
+                print(names)
+
+                if self.check_pagination():
+                    is_next_button = self.click_next_button()
+                    if not is_next_button:
+                        break
+                else:
+                    break
+
+        return names
 
     def delete_product(self, name):
-        """Удалить продукт"""
-        self.find_product_by_name(name)
-        if self.get_product_quantity():
-            products = self.get_products()
-            products[0].find_element(*ProductPageLocators.CHECK_BOX).click()
-            self.driver.find_element(*ProductPageLocators.DELETE).click()
-            alert = self.driver.switch_to_alert()
-            alert.accept()
-        else:
-            return None
-        self.find_product_by_name("")
+        """Deleting product"""
+        self.filter_product_by_name(name)
+        quantity = self.get_product_quantity()
+        if quantity:
+            try:
+                products = self.get_products()
+                products[0].find_element(*ProductPageLocators.CHECK_BOX).click()
+                self.driver.find_element(*ProductPageLocators.DELETE).click()
+                alert = self.driver.switch_to.alert
+                alert.accept()
+                self.filter_product_by_name("")
+
+                WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(ProductPageLocators.SUCCESS))
+            except(NoSuchElementException, TimeoutException):
+                print("Can't delete")
 
     def modify_product(self, old_name, new_name):
-        """Изменить продукт"""
-        self.find_product_by_name(old_name)
+        """Modifying product, changing its name from old_name to new_name"""
+        self.filter_product_by_name(old_name)
         if self.get_product_quantity():
             products = self.get_products()
             products[0].find_element(*ProductPageLocators.MODIFY).click()
-            self.set_product_name(new_name)
-            self.save()
-        self.find_product_by_name("")
+
+            try:
+                self.set_product_name(new_name)
+                self.save()
+                WebDriverWait(self.driver, 10).until(EC.presence_of_element_located(ProductPageLocators.SUCCESS))
+            except(NoSuchElementException, TimeoutException):
+                print("Can't modify")
+
+        self.filter_product_by_name("")
+
+    def check_pagination(self):
+        """Check if there is more than one pages of products"""
+        pagination = self.driver.find_elements(*ProductPageLocators.PAGINATION)
+        return len(pagination) > 0
+
+    def click_next_button(self):
+        """Click > button"""
+        next_page = self._wait_element_(*ProductPageLocators.NEXT_PAGE, delay=5)
+        if next_page:
+            next_page.click()
+        return next_page is not None
