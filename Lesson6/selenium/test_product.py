@@ -20,7 +20,6 @@ class TestProductPage:
         new_names = product_page.get_product_names()
         assert all([i in new_names for i in old_names])
         assert len(new_names) == len(old_names) + 1
-        time.sleep(10)
 
     def test_mod_product(self, product_page):
         """Change product name from Some to Some new Stuff"""
@@ -40,3 +39,5 @@ class TestProductPage:
     def test_product_name_all_pages(self, product_page):
         """Shows list of product names"""
         print(product_page.get_product_names())
+
+
