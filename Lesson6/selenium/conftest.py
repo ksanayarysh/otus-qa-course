@@ -6,12 +6,13 @@ from selenium import webdriver
 
 from Lesson6.selenium.models.page_objects.login_page import LoginPage
 from Lesson6.selenium.models.page_objects.products_page import ProductPage
+from Lesson6.selenium.models.page_objects.download_page import DownloadPage
 
 
 def pytest_addoption(parser):
     """Adding options to command line"""
     parser.addoption("--address", action="store",
-                     default="http://192.168.145.130/", help="Opencart web address")
+                     default="http://192.168.88.132/", help="Opencart web address")
     parser.addoption("--browser", action="store", default="firefox", help="Browser name")
     parser.addoption("--wait", action="store", default=10, help="Implicity wait")
 
@@ -78,3 +79,17 @@ def open_product_page(driver):
     driver.find_element_by_css_selector("#menu-catalog a").click()
     driver.find_element_by_link_text("Products").click()
 
+
+@pytest.fixture
+def open_download_page(driver):
+    """Opening download page"""
+    #driver.get("http://192.168.88.132/opencart/admin/index.php?route=catalog/download/add")
+    driver.find_element_by_css_selector("[class=close]").click()
+    driver.find_element_by_css_selector("#menu-catalog a").click()
+    driver.find_element_by_link_text("Downloads").click()
+
+
+@pytest.fixture
+def download_page(driver):
+    """Getting download page object"""
+    return DownloadPage(driver)

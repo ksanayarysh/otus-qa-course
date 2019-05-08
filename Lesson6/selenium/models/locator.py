@@ -41,3 +41,13 @@ class ProductPageLocators:
     IMAGE1 = (By.ID, "input-image0")
     IMAGE2 = (By.ID, "input-image1")
     ADD_IMAGE = (By.CSS_SELECTOR, "[data-original-title=\"Add Image\"]")
+
+
+class DownloadFileLocators:
+    """Locators for downloading file"""
+    DOWNLOAD_FILE_NAME = (By.NAME, "download_description[1][name]")
+    DOWNLOADS = (By.CSS_SELECTOR, "tbody tr")
+    UPLOAD_BUTTON = (By.CSS_SELECTOR, "button[id=button-upload]")
+    FILE = (By.NAME, "file")
+    SAVE_BUTTON = (By.CSS_SELECTOR, "button[type=submit]")
+    ADD_BUTTON = (By.CSS_SELECTOR, "[class=\"fa fa-plus\"]")
