@@ -114,6 +114,9 @@ class ProductPage(BasePage):
         """Getting product quantity, current page """
         return len(self.driver.find_elements(*ProductPageLocators.PRODUCT_TABLE))
 
+    def get_all_quantity(self):
+        return len(self.get_product_names())
+
     def get_products(self):
         """Getting product web elements current page"""
         return self.driver.find_elements(*ProductPageLocators.PRODUCT_TABLE)
@@ -149,10 +152,9 @@ class ProductPage(BasePage):
                 self.driver.find_element(*ProductPageLocators.DELETE).click()
                 alert = self.driver.switch_to.alert
                 alert.accept()
-                self.filter_product_by_name("")
-
                 WebDriverWait(self.driver, 10).until(
                     EC.presence_of_element_located(ProductPageLocators.SUCCESS))
+                self.filter_product_by_name("")
             except(NoSuchElementException, TimeoutException):
                 print("Can't delete")
 

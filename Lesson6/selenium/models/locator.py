@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 
 
 class BaseLocators:
-    PRIMARY_BUTTON = (By.CLASS_NAME, "btn.btn-primary")
+    PRIMARY_BUTTON = (By.CSS_SELECTOR, "[class=\"btn btn-primary\"]")
 
 
 class LoginPageLocators:
