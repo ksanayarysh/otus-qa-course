@@ -930,3 +930,30 @@ ERROR:root:Message: chrome not reachable
 
 INFO:root:2019-05-11 20:34:30.303039:Before navigate to http://192.168.145.130/opencart/admin/
 INFO:root:2019-05-11 20:34:32.339505:After navigate to http://192.168.145.130/opencart/admin/
+INFO:root:Time to load:
+INFO:root:Time to load:
+INFO:root:Time to load:
+INFO:root:2019-05-12 18:51:46.937110:Before navigate to http://192.168.145.130/opencart/admin/
+INFO:root:2019-05-12 18:51:48.543032:After navigate to http://192.168.145.130/opencart/admin/
+ERROR:root:Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: chrome=74.0.3729.131)
+  (Driver info: chromedriver=74.0.3729.6 (255758eccf3d244491b8a1317aa76e1ce10d57e9-refs/branch-heads/3729@{#29}),platform=Windows NT 10.0.17134 x86_64)
+
+INFO:root:2019-05-12 18:52:56.425851:Before navigate to http://192.168.145.130/opencart/admin/
+INFO:root:2019-05-12 18:52:57.837663:After navigate to http://192.168.145.130/opencart/admin/
+ERROR:root:Message: no such element: Unable to locate element: {"method":"css selector","selector":"div[class="alert alert-success alert-dismissible"]"}
+  (Session info: chrome=74.0.3729.131)
+  (Driver info: chromedriver=74.0.3729.6 (255758eccf3d244491b8a1317aa76e1ce10d57e9-refs/branch-heads/3729@{#29}),platform=Windows NT 10.0.17134 x86_64)
+
+INFO:root:2019-05-12 18:55:21.568012:Before navigate to http://192.168.145.130/opencart/admin/
+INFO:root:ssss
+ERROR:root:Message: no such element: Unable to locate element: {"method":"css selector","selector":"div[class="alert alert-success alert-dismissible"]"}
+  (Session info: chrome=74.0.3729.131)
+  (Driver info: chromedriver=74.0.3729.6 (255758eccf3d244491b8a1317aa76e1ce10d57e9-refs/branch-heads/3729@{#29}),platform=Windows NT 10.0.17134 x86_64)
+
+INFO:root:2019-05-12 18:56:18.183304:Before navigate to http://192.168.145.130/opencart/admin/
+INFO:root:2019-05-12 18:58:06.849795:Before navigate to http://192.168.145.130/opencart/admin/
+INFO:root:Page load http://192.168.145.130/opencart/admin/ 1667 ms
+INFO:root:2019-05-12 19:54:38.173659:Before navigate to http://192.168.145.130/opencart/admin/
+INFO:root:Page load http://192.168.145.130/opencart/admin/ 31771 ms

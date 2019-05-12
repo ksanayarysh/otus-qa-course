@@ -1,7 +1,8 @@
 """Conftest"""
 import sys
 import pytest
-
+import urllib.parse
+from browsermobproxy import Server
 from selenium import webdriver
 from selenium.webdriver.support.events import EventFiringWebDriver
 
@@ -9,6 +10,12 @@ from Lesson6.selenium.models.page_objects.login_page import LoginPage
 from Lesson6.selenium.models.page_objects.products_page import ProductPage
 from Lesson6.selenium.models.page_objects.download_page import DownloadPage
 from Lesson6.selenium.log.write_log import TestListener
+
+server = Server(r"C:\Python\browsermob-proxy-2.1.4\bin\browsermob-proxy")
+server.start()
+
+proxy = server.create_proxy()
+proxy.new_har()
 
 
 def pytest_addoption(parser):
@@ -36,10 +43,14 @@ def driver(request):
         wd = EventFiringWebDriver(webdriver.Firefox(firefox_profile=profile, capabilities=capabilities), TestListener())
         wd.maximize_window()
     elif browser == 'chrome':
+        chrome_options = webdriver.ChromeOptions()
+        url = urllib.parse.urlparse(proxy.proxy).path
+        chrome_options.add_argument('--proxy-server=%s' % url)
         capabilities = webdriver.DesiredCapabilities.CHROME.copy()
         capabilities['acceptSslCerts'] = True
         capabilities['acceptInsecureCerts'] = True
-        driver = webdriver.Chrome(desired_capabilities=capabilities)
+        capabilities['loggingPrefs'] = {'performance': 'ALL'}
+        driver = webdriver.Chrome(desired_capabilities=capabilities, options=chrome_options)
         driver.implicitly_wait(wait)
         wd = EventFiringWebDriver(driver, TestListener())
     else:
@@ -47,6 +58,7 @@ def driver(request):
         sys.exit(1)
     yield wd
     wd.quit()
+
 
 @pytest.fixture
 def open_login_page(driver, request):

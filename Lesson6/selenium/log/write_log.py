@@ -18,11 +18,12 @@ class TestListener(AbstractEventListener):
         logging.info(msg_with_date("".join(["Before navigate to ", url])))
 
     def after_navigate_to(self, url, driver):
-        logging.info(msg_with_date("".join(["After navigate to ", url])))
+        performance_log = driver.get_log("performance")
+        time_to_load = performance_log[-1].get('timestamp') - performance_log[0].get("timestamp")
+        logging.info(" ".join(["Page load", url, str(time_to_load), 'ms']))
 
     def on_exception(self, exception, driver):
         logging.error(exception)
         now = dt.datetime.now()
         filename = "".join(["screenshots/exception", now.strftime("%d-%m-%Y-%H-%M"), ".png"])
-        print(filename)
         driver.get_screenshot_as_file(filename)
