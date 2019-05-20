@@ -49,3 +49,6 @@ class BasePage:
 
     def _wait_visibility_(self, element, by, value):
         pass
+
+    def title(self):
+        return self.driver.title

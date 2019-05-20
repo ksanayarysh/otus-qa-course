@@ -2,6 +2,7 @@
 import sys
 import pytest
 import urllib.parse
+import platform
 from browsermobproxy import Server
 from selenium import webdriver
 from selenium.webdriver.support.events import EventFiringWebDriver
@@ -16,6 +17,25 @@ server.start()
 
 proxy = server.create_proxy()
 proxy.new_har()
+
+
+@pytest.mark.usefixtures("environment_info")
+@pytest.fixture(scope='session', autouse=True)
+def configure_html_report_env(request, environment_info):
+    request.config._metadata.update(
+        {"browser": request.config.getoption("--browser"),
+         "address": request.config.getoption("--address"),
+         "os_platform": environment_info[0],
+         "system": environment_info[1]})
+    yield
+
+
+@pytest.fixture(scope="session")
+def environment_info():
+    os_platform = platform.platform()
+    system = platform.system()
+    return os_platform, system
+
 
 
 def pytest_addoption(parser):
@@ -52,6 +72,7 @@ def driver(request):
         capabilities['loggingPrefs'] = {'performance': 'ALL'}
         driver = webdriver.Chrome(desired_capabilities=capabilities, options=chrome_options)
         driver.implicitly_wait(wait)
+        driver.maximize_window()
         wd = EventFiringWebDriver(driver, TestListener())
     else:
         print('Unsupported browser!')
@@ -72,6 +93,7 @@ def open_login_page(driver, request):
 def param_test(request):
     return request.param
 
+
 @pytest.fixture
 def login(open_login_page, param_test):
     """Logging in"""
@@ -79,16 +101,6 @@ def login(open_login_page, param_test):
     open_login_page.set_username(user)
     open_login_page.set_password(password)
     open_login_page.login()
-
-
-@pytest.fixture
-def open_download_page(driver):
-    """Opening download page"""
-    #driver.get("http://192.168.88.132/opencart/admin/index.php?route=catalog/download/add")
-    driver.find_element_by_css_selector("[class=close]").click()
-    driver.find_element_by_css_selector("#menu-catalog a").click()
-    driver.find_element_by_link_text("Downloads").click()
-    return DownloadPage(driver)
 
 
 @pytest.fixture

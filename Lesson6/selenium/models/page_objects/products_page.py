@@ -25,11 +25,6 @@ class ProductPage(BasePage):
         self.press_image()
         self.add_image()
         self.save()
-        try:
-            WebDriverWait(self.driver, 10).until(
-                EC.presence_of_element_located(ProductPageLocators.SUCCESS))
-        except(NoSuchElementException, TimeoutException):
-            print("Can't add product")
 
     def press_add_button(self):
         """Press  + button"""
@@ -110,7 +105,7 @@ class ProductPage(BasePage):
         filter_field.send_keys(name)
         self.driver.find_element(*ProductPageLocators.FILTER_BUTTON).click()
 
-    def get_product_quantity(self):
+    def if_is_any_product(self):
         """Getting product quantity, current page """
         return len(self.driver.find_elements(*ProductPageLocators.PRODUCT_TABLE))
 
@@ -121,16 +116,17 @@ class ProductPage(BasePage):
         """Getting product web elements current page"""
         return self.driver.find_elements(*ProductPageLocators.PRODUCT_TABLE)
 
-
     def get_product_names(self):
         """Getting elements names"""
         names = []
         while True:
-            if self.get_product_quantity() > 0:
+            if self.if_is_any_product() > 0:
                 products = self.get_products()
                 if products:
                     for product in products:
                         names.append(product.find_elements(*ProductPageLocators.TD)[2].text)
+                else:
+                    break
 
                 if self.check_pagination():
                     is_next_button = self.click_next_button()
@@ -144,7 +140,7 @@ class ProductPage(BasePage):
     def delete_product(self, name):
         """Deleting product"""
         self.filter_product_by_name(name)
-        quantity = self.get_product_quantity()
+        quantity = self.if_is_any_product()
         if quantity:
             try:
                 products = self.get_products()
@@ -161,19 +157,12 @@ class ProductPage(BasePage):
     def modify_product(self, old_name, new_name):
         """Modifying product, changing its name from old_name to new_name"""
         self.filter_product_by_name(old_name)
-        if self.get_product_quantity():
+        if self.if_is_any_product():
             products = self.get_products()
             products[0].find_element(*ProductPageLocators.MODIFY).click()
 
-            try:
-                self.set_product_name(new_name)
-                self.save()
-                WebDriverWait(self.driver, 10).until(
-                    EC.presence_of_element_located(ProductPageLocators.SUCCESS))
-            except(NoSuchElementException, TimeoutException):
-                print("Can't modify")
-
-        self.filter_product_by_name("")
+            self.set_product_name(new_name)
+            self.save()
 
     def check_pagination(self):
         """Check if there is more than one pages of products"""
@@ -210,3 +199,6 @@ class ProductPage(BasePage):
     def press_add_image(self):
         """Pressing add image button"""
         self.driver.find_element(*ProductPageLocators.ADD_IMAGE).click()
+
+    def successfully_modified(self):
+        return len(self.driver.find_elements(*ProductPageLocators.SUCCESS)) > 0

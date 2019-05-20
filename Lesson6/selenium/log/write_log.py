@@ -4,7 +4,7 @@ import datetime as dt
 
 from selenium.webdriver.support.events import AbstractEventListener
 
-logging.basicConfig(filename="log/sample.log", level=logging.INFO)
+logging.basicConfig(filename="sample.log", level=logging.INFO)
 
 
 def msg_with_date(msg):
