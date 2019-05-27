@@ -1,3 +1,5 @@
+import allure
+from pathlib import Path
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -52,3 +54,11 @@ class BasePage:
 
     def title(self):
         return self.driver.title
+
+    def get_photo(self, file_name):
+        """Getting current driver screenshot"""
+        path = Path().absolute()
+        file_name_with_path = "\\".join([str(path), "Lesson6\selenium\screenshots", file_name])
+        print(file_name_with_path)
+        self.driver.get_screenshot_as_file(file_name_with_path)
+        allure.attach.file(file_name_with_path, attachment_type=allure.attachment_type.PNG)

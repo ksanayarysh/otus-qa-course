@@ -3,16 +3,17 @@ import sys
 import pytest
 import urllib.parse
 import platform
+import allure
 from browsermobproxy import Server
 from selenium import webdriver
 from selenium.webdriver.support.events import EventFiringWebDriver
 
 from Lesson6.selenium.models.page_objects.login_page import LoginPage
 from Lesson6.selenium.models.page_objects.products_page import ProductPage
-from Lesson6.selenium.models.page_objects.download_page import DownloadPage
 from Lesson6.selenium.log.write_log import TestListener
 
-server = Server(r"C:\Python\browsermob-proxy-2.1.4\bin\browsermob-proxy")
+
+server = Server(r"D:\browsermob\browsermob-proxy-2.1.4\bin\browsermob-proxy")
 server.start()
 
 proxy = server.create_proxy()
@@ -37,15 +38,15 @@ def environment_info():
     return os_platform, system
 
 
-
 def pytest_addoption(parser):
     """Adding options to command line"""
     parser.addoption("--address", action="store",
-                     default="http://192.168.145.130/", help="Opencart web address")
+                     default="http://192.168.88.132/", help="Opencart web address")
     parser.addoption("--browser", action="store", default="chrome", help="Browser name")
     parser.addoption("--wait", action="store", default=10, help="Implicity wait")
 
 
+@allure.title("Getting browser")
 @pytest.fixture(scope="session", autouse=True)
 def driver(request):
     """Getting driver according to command line option"""
@@ -82,25 +83,26 @@ def driver(request):
 
 
 @pytest.fixture
+@allure.title("Opening login page anf returning it")
 def open_login_page(driver, request):
     """Opening admin login page"""
     url = 'opencart/admin/'
     driver.get("".join([request.config.getoption("--address"), url]))
     return LoginPage(driver)
 
-
-@pytest.fixture(params=[("admin", "admin")])
-def param_test(request):
-    return request.param
+#
+# @pytest.fixture(params=[("admin", "admin")])
+# def param_test(request):
+#     return request.param[0], request[1]
 
 
 @pytest.fixture
-def login(open_login_page, param_test):
+def login(open_login_page, user, password):
     """Logging in"""
-    (user, password) = param_test
     open_login_page.set_username(user)
     open_login_page.set_password(password)
     open_login_page.login()
+    open_login_page.get_photo("login.png")
 
 
 @pytest.fixture

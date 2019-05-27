@@ -2,6 +2,8 @@
 Product page
 """
 import time
+
+import allure
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -9,6 +11,7 @@ from Lesson6.selenium.models.locator import ProductPageLocators
 from Lesson6.selenium.models.page import BasePage
 
 PRODUCT_IMAGES_PATH = ("duck", "dog", "kitty")
+
 
 class ProductPage(BasePage):
     """Working with Product Page """

@@ -1,16 +1,17 @@
 """Module for testing of downloading file"""
+import allure
 import pytest
 
 
-@pytest.mark.usefixtures("open_download_page")
 @pytest.mark.usefixtures("download_page")
+@pytest.mark.usefixtures("open_product_page")
 @pytest.mark.usefixtures("login")
-@pytest.mark.parametrize("user", ["admin"])
-@pytest.mark.parametrize("password", ["admin"])
-@pytest.mark.usefixtures("login_page")
+@pytest.mark.parametrize("user,password", [("admin", "admin")])
 @pytest.mark.usefixtures("open_login_page")
+@allure.title("Test download")
 class TestDownloadFile:
     """Class for tests downloading file"""
+    @pytest.mark.xfail(reason="Not yet implemented")
     def test_download_file(self, download_page):
         """
         Gets current count of downloads, adds a new one,
