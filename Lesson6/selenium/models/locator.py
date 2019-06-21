@@ -51,3 +51,8 @@ class DownloadFileLocators:
     FILE = (By.NAME, "file")
     SAVE_BUTTON = (By.CSS_SELECTOR, "button[type=submit]")
     ADD_BUTTON = (By.CSS_SELECTOR, "[class=\"fa fa-plus\"]")
+
+
+class ManufacturerLocators:
+    """Manufacturer locators"""
+    MANUFACTURER_TABLE = (By.CSS_SELECTOR, "div.panel-body tbody tr")

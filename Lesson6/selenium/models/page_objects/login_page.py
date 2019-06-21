@@ -37,10 +37,17 @@ class LoginPage(BasePage):
         except NoSuchElementException:
             print("No password")
 
-    def login(self):
+    def press_login(self):
         """press "log in" button"""
         try:
             self.login_button().click()
             WebDriverWait(self.driver, 10).until(EC.title_is, "Dashboard")
         except NoSuchElementException:
             print("Can't log in")
+
+    def login(self, request, user_name, password):
+        url = 'opencart/admin/'
+        self.driver.get("".join([request.config.getoption("--address"), url]))
+        self.set_username(user_name)
+        self.set_password(password)
+        self.press_login()
