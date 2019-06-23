@@ -1,6 +1,9 @@
 """Тесты"""
+import os
+
 import pytest
 import allure
+import sqlite3
 
 
 @pytest.mark.usefixtures("open_product_page")
@@ -8,12 +11,9 @@ import allure
 @pytest.mark.parametrize("user,password", [("admin", "admin")])
 @pytest.mark.usefixtures("open_login_page")
 @pytest.mark.Product
-@allure.title("Test product page functionality")
 class TestProductPage:
     """Tests for product page"""
 
-    @allure.title("Test modifying a product")
-    @allure.severity(allure.severity_level.NORMAL)
     def test_mod_product(self, open_product_page):
         """Change product name from Some to Some new Stuff"""
         product_page = open_product_page
@@ -27,8 +27,6 @@ class TestProductPage:
         assert new_name in new_names
         assert len(old_names) == len(new_names)
 
-    @allure.title("Test deleting a product")
-    @allure.severity(allure.severity_level.NORMAL)
     def test_delete_product(self, open_product_page):
         """Test for deleting first product """
         product_page = open_product_page
@@ -41,8 +39,6 @@ class TestProductPage:
         """Shows list of product names"""
         print(open_product_page.get_product_names())
 
-    @allure.title("Test adding a product")
-    @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.right_adding
     def test_add_product(self, open_product_page):
         """Test for adding product"""
@@ -54,3 +50,14 @@ class TestProductPage:
         new_names = product_page.get_product_names()
         assert all([i in new_names for i in old_names])
         assert len(new_names) == len(old_names) + 1
+
+
+def test():
+    dir_path = os.path.dirname(os.path.abspath(__file__))
+    base_path = "/".join([dir_path, "log/logs/log2.db"])
+    print(base_path)
+    conn = sqlite3.connect(base_path)
+    cursor = conn.cursor()
+    result = cursor.execute("select * from  log ")
+    for e in result:
+        print(e)
