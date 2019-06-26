@@ -6,6 +6,10 @@ def pytest_addoption(parser):
     parser.addoption('--method',  default="GET /opencart/ ", action="store", help='Specify method')
     parser.addoption('--header',  default="Date", action='store', help='Specify header')
     parser.addoption('--port',  default=80, action="store", help='Specify port')
+    parser.addoption('--imgs',  default=False, action="store_true", help='Show images')
+    parser.addoption('--links',  default=False, action="store_true", help='Show links')
+    parser.addoption('--tags',  default=False, action="store_true", help='Show tags')
+    parser.addoption('--maxtag',  default=True, action="store_true", help='Show the most frequent tag')
 
 
 @pytest.fixture(autouse=True)
