@@ -55,6 +55,9 @@ if __name__ == "__main__":
     line = p2.stdout.read()
     print(line.decode())
 
+    print(subprocess.check_output(["ps", "aux"]).decode())
+
+
 
 
 

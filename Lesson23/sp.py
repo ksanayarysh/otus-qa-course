@@ -33,15 +33,19 @@ def test_check_default_route():
 
 
 def test_processor_info():
-    print(subprocess.check_output("lscpu").decode())
-
-
-def test_all_process_info():
-    print(subprocess.check_output(["ps", "aux"]).decode())
+    resp = subprocess.check_output("lscpu").decode()
+    pat = re.compile(r".*Model name:( *)(.*)", re.MULTILINE)
+    model = pat.findall(resp)[0][1]
+    assert "i5-8265U" in model
+    logging.info(model)
 
 
 def test_if_stat():
-    print(subprocess.check_output(["tail",  "/proc/net/dev"]).decode())
+    resp = subprocess.check_output(["tail",  "/proc/net/dev"]).decode()
+    pat = re.compile(r"wlp2s0: ([1-9]\d*)", re.MULTILINE)
+    wl = pat.findall(resp)[0]
+    assert int(wl) > 0
+    logging.info(wl)
 
 
 def test_service_stat():
@@ -54,15 +58,18 @@ def test_service_stat():
 
 def test_cur_dir():
     resp = subprocess.check_output(["pwd"]).decode()
-    print(resp)
+    assert "/home/ksenia/work/otus-qa-course/Lesson23" in resp
+    logging.info(resp)
 
 
 def test_cernel_version():
     resp = subprocess.check_output(["uname", "-r"]).decode()
-    print(resp)
+    assert "4.15.0-1043-oem" in resp
+    logging.info(resp)
 
 
 def test_os_version():
     resp = subprocess.check_output(["cat", "/proc/version"]).decode()
-    print(resp)
+    assert "Ubuntu 7.4.0-1ubuntu1~18.04.1)" in resp
+    logging.info(resp)
 
