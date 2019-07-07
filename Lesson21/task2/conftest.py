@@ -4,6 +4,8 @@ import logging
 import pytest
 
 from Lesson21.task2.my_ftplib import MyFTP
+from Lesson21.task2.my_sshlib import MySsh
+
 logging.basicConfig(level=logging.INFO)
 
 @pytest.fixture
@@ -24,7 +26,8 @@ def my_ftp(creds):
     my_ftp.close()
 
 
-def test1(creds):
-    logging.info(creds)
-    print(type(creds))
-    logging.info(creds[0])
+@pytest.fixture
+def ssh(creds):
+    ssh = MySsh(creds[1], creds[2], creds[0], 22)
+    yield ssh
+    ssh.close()

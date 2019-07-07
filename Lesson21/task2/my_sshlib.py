@@ -2,6 +2,8 @@ import logging
 
 import paramiko
 
+SERVICE_FILENAME = "vsftpd.conf"
+
 str = 'listen=NO\n' \
       'listen_ipv6=YES\n' \
       'anonymous_enable=NO\n' \
@@ -37,33 +39,41 @@ class MySsh:
         transport.connect(username=user, password=secret)
         self.sftp = paramiko.SFTPClient.from_transport(transport)
 
+    def close(self):
+        self.client.close()
+
     def exec_command_as_root(self, command):
         stdin, stdout, stderr = self.client.exec_command(command, get_pty=True)
         stdin.write(self.secret + "\n")
         stdin.flush()
-        print(stdout.channel.recv_exit_status())
+        logging.info("{0} - {1}".format(command, stdout.channel.recv_exit_status()))
 
     def exec_command(self, command):
         stdin, stdout, stderr = self.client.exec_command(command, get_pty=True)
-        print(stdout.channel.recv_exit_status())
+        logging.info("{0} - {1}".format(command, stdout.channel.recv_exit_status()))
 
     def write_file(self, str):
-        f = self.sftp.open("/home/ksenia/Downloads/1.txt", "wb")
+        f = self.sftp.open("/home/ksenia/vsftpd.conf", "wb")
         f.write(str)
         f.close()
 
     def is_ftp_not_installed(self):
-        stdin, stdout, stderr = self.client.exec_command("systemctl status vsftpd", get_pty=True)
+        command = "dpkg -s vsftpd  | grep \"install ok installed\""
+        stdin, stdout, stderr = self.client.exec_command(command, get_pty=True)
         data = stdout.read()
-        logging.info(data)
-        return b"Unit vsftpd.service could not be found" in data
+        logging.info(data.decode())
+        return len(data) == 0
 
     def install_ftp(self):
         self.exec_command_as_root("sudo apt-get install vsftpd")
         self.exec_command_as_root("sudo systemctl start vsftpd")
         self.exec_command_as_root("sudo systemctl enable vsftpd")
         self.write_file(str)
-        self.exec_command_as_root("sudo service vsftpd restart")
+        self.copy_config_file()
+        self.restart_ftp()
+
+    def restart_ftp(self):
+        self.exec_command_as_root("sudo systemctl restart vsftpd ")
 
     def create_ftp_user(self, user, password):
         self.exec_command_as_root("sudo mkdir /var/ftp_home")
@@ -80,5 +90,36 @@ class MySsh:
 
     def delete_ftp_user(self, user):
         self.exec_command_as_root("".join(["sudo userdel", user]))
+
+    def copy_config_file(self):
+        self.exec_command_as_root("sudo rm /etc/vsftpd.conf")
+        self.exec_command_as_root("sudo cp /home/ksenia/vsftpd.conf /etc/vsftpd.conf")
+
+    def get_ftp_port(self):
+        stdin, stdout, stderr = self.client.exec_command('cat {0} | grep listen_port '.format(SERVICE_FILENAME))
+        data = stdout.read().decode()
+        print(data)
+        return data
+
+    def add_listen_port(self, port):
+        self.exec_command_as_root("sudo echo listen_port={0} >> {1}".format(port, SERVICE_FILENAME))
+
+    def change_ftp_port(self, port):
+        self.exec_command_as_root(
+            "sudo sed -i 's/.*listen_port=.*/listen_port={0}/' {1}".format(port, SERVICE_FILENAME))
+
+    def set_ftp_port(self, port):
+        """ Check if port is specified
+        if it is, we change string listen_port=
+        if not,  we add string listen_port=
+        then we reaload service """
+        listen_port = self.get_ftp_port()
+        logging.info(listen_port)
+        if not listen_port:
+            self.add_listen_port(port)
+        else:
+            self.change_ftp_port(port)
+        self.copy_config_file()
+        self.restart_ftp()
 
 
