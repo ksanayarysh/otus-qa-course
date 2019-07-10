@@ -5,7 +5,7 @@ pipeline {
 	stages {
         	stage('Build') {
             		steps {
-                		sh "pytest Lesson6/selenium -q --address=" + params['address']
+                		sh "pytest Lesson6/selenium -q --address=" + params['address'] + " --browser=" + params['browser']
             		}
         	}
         	stage('Test') {
