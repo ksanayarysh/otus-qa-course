@@ -7,7 +7,6 @@ import pytest
 @pytest.mark.usefixtures("login")
 @pytest.mark.parametrize("user,password", [("admin", "admin")])
 @pytest.mark.usefixtures("open_login_page")
-@allure.title("Test download")
 class TestDownloadFile:
     """Class for tests downloading file"""
     @pytest.mark.xfail(reason="Not yet implemented")
