@@ -1,8 +1,6 @@
 import pytest
-import allure
 
 @pytest.mark.login_with_different_creds
-@allure.title("Log in")
 @pytest.mark.usefixtures("login")
 class TestLoginPage:
 
