@@ -8,7 +8,6 @@ class TestLoginPage:
     @pytest.mark.parametrize("user,password,expected", [
         pytest.param("admin", "11", False, id='wrong'),
         pytest.param("test1", "\\t", False, id='wrong'),
-        pytest.param("test3", r"№;№;", False, id='wrong'),
         pytest.param("  ", "123", False, id='wrong'),
         pytest.param("john", "wee", False, id='wrong'),
         pytest.param("admin", "admin", True, id='right'),
