@@ -13,4 +13,5 @@ class TestLoginPage:
         pytest.param("admin", "admin", True, id='right'),
     ])
     def test_login(self, driver, user, password, expected):
+        sleep(5)
         assert ("dashboard" in driver.current_url) == expected
