@@ -1,3 +1,4 @@
+from time import sleep
 import pytest
 
 @pytest.mark.login_with_different_creds
