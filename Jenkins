@@ -1,11 +1,11 @@
 pipeline {
 	agent {
-		docker {image "docker_otus1"}
+		docker {image "docker_otus"}
 	}
 	stages {
         	stage('Build') {
             		steps {
-                		echo 'Building..'
+                		wget https://chromedriver.storage.googleapis.com/75.0.3770.90/chromedriver_linux64.zip
             		}
         	}
         	stage('Test') {
