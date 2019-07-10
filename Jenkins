@@ -11,7 +11,7 @@ pipeline {
 		}
         	stage('Build') {
             		steps {
-                		sh "pytest Lesson6/selenium -q --address=" + params['address'] + " --browser=" + params['browser']
+                		sh "pytest Lesson6/selenium/test_login_page.py -q --address=" + params['address'] + " --browser=" + params['browser']
             		}
         	}
         	stage('Test') {
