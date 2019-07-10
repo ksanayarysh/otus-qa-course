@@ -17,7 +17,7 @@ pipeline {
 	}
 	post {
         always {
-            archiveArtifacts artifacts: 'report', fingerprint: true
+            archiveArtifacts artifacts: 'Check/reports', fingerprint: true
         }
     }
 }
