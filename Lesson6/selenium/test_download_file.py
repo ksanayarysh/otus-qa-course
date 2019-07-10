@@ -1,5 +1,4 @@
 """Module for testing of downloading file"""
-import allure
 import pytest
 
 
