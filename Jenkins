@@ -5,8 +5,7 @@ pipeline {
 	stages {
         	stage('Build') {
             		steps {
-                		sh 'wget https://chromedriver.storage.googleapis.com/75.0.3770.90/chromedriver_linux64.zip'
-				sh 'unzip chromedriver_linux64.zip'
+                		echo 'Testing..'
             		}
         	}
         	stage('Test') {
