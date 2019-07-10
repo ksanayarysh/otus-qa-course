@@ -44,7 +44,7 @@ def driver(request):
         capabilities['acceptInsecureCerts'] = True
         capabilities['loggingPrefs'] = {'performance': 'ALL'}
         driver = webdriver.Chrome(desired_capabilities=capabilities,
-                                  executable_path="/home/ksenia/tools/chromedriver")
+                                  executable_path="/usr/local/bin/chromedriver")
         driver.implicitly_wait(wait)
         driver.maximize_window()
         wd = EventFiringWebDriver(driver, TestListenerDb())
