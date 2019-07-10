@@ -36,15 +36,14 @@ def driver(request):
                                                     capabilities=capabilities), TestListenerDb())
         wd.maximize_window()
     elif browser == 'chrome':
-        #chrome_options = webdriver.ChromeOptions()
-        # url = urllib.parse.urlparse(proxy.proxy).path
-        # chrome_options.add_argument('--proxy-server=%s' % url)
-        capabilities = webdriver.DesiredCapabilities.CHROME
-        capabilities['acceptSslCerts'] = True
-        capabilities['acceptInsecureCerts'] = True
-        capabilities['loggingPrefs'] = {'performance': 'ALL'}
-        driver = webdriver.Chrome(desired_capabilities=capabilities,
-                                  executable_path="/usr/local/bin/chromedriver")
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--window-size=1420,1080')
+        chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--disable-gpu')
+        driver = webdriver.Chrome(chrome_options=chrome_options,
+                                  executable_path="/home/ksenia/tools/chromedriver")
+
         driver.implicitly_wait(wait)
         driver.maximize_window()
         wd = EventFiringWebDriver(driver, TestListenerDb())
