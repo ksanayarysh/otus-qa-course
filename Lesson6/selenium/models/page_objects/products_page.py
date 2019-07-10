@@ -95,7 +95,6 @@ class ProductPage(BasePage):
             print("No data tab")
 
     def save(self):
-        """Нажать кнопку сохранить"""
         try:
             self.driver.find_element(*ProductPageLocators.SAVE).click()
         except NoSuchElementException:
