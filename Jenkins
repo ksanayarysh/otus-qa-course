@@ -9,26 +9,15 @@ pipeline {
 				echo params["browser"]
 			}
 		}
-        	stage('Build') {
+        	stage('Pytest') {
             		steps {
-                		sh "pytest Lesson6/selenium/test_login_page.py -q --address=" + params['address'] + " --browser=" + params['browser']
+                		sh "pytest --alluredir=reports Lesson6/selenium/test_login_page.py -q --address=" + params['address'] + " --browser=" + params['browser']
             		}
         	}
-        	stage('Test') {
-            		steps {
-                		echo 'Testing..'
-            		}
-        	}
-        	stage('Deploy') {
-            		steps {
-                		echo 'Deploying....'
-            		}
-        	}
-    	}
+	}
 	post {
         always {
-            archiveArtifacts artifacts: 'build/libs/**/*.jar', fingerprint: true
-            junit 'build/reports/**/*.xml'
+            archiveArtifacts artifacts: 'report', fingerprint: true
         }
     }
 }
