@@ -4,6 +4,7 @@ import sys
 import pytest
 
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.events import EventFiringWebDriver
 
 from Lesson6.selenium.log.log_to_db_listener import TestListenerDb
@@ -37,13 +38,14 @@ def driver(request):
                                                     capabilities=capabilities), TestListenerDb())
         wd.maximize_window()
     elif browser == 'chrome':
-        chrome_options = webdriver.ChromeOptions()
+        chrome_options = Options()
+
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--window-size=1420,1080')
         chrome_options.add_argument('--headless')
         chrome_options.add_argument('--disable-gpu')
-        driver = webdriver.Chrome(chrome_options=chrome_options,
-                                  executable_path="/usr/local/bin/chromedriver")
+        driver = webdriver.Chrome(options=chrome_options,
+                                  executable_path="/home/ksenia/tools/chromedriver")
 
         driver.implicitly_wait(wait)
         driver.maximize_window()
@@ -59,7 +61,8 @@ def driver(request):
 def open_login_page(driver, request):
     """Opening admin login page"""
     url = 'opencart/admin/'
-    driver.get("".join([request.config.getoption("--address"), url]))
+    address = "/".join(["http:/", request.config.getoption("--address"), url])
+    driver.get(address)
     return LoginPage(driver)
 
 
@@ -69,7 +72,7 @@ def login(open_login_page, user, password):
     open_login_page.set_username(user)
     open_login_page.set_password(password)
     open_login_page.login()
-    open_login_page.get_photo("login.png")
+    # open_login_page.get_photo("login.png")
 
 
 @pytest.fixture
