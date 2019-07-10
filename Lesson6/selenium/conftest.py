@@ -1,42 +1,13 @@
 """Conftest"""
 import sys
 import pytest
-import urllib.parse
-import platform
-import allure
-#from browsermobproxy import Server
+
 from selenium import webdriver
 from selenium.webdriver.support.events import EventFiringWebDriver
 
 from Lesson6.selenium.log.log_to_db_listener import TestListenerDb
 from Lesson6.selenium.models.page_objects.login_page import LoginPage
 from Lesson6.selenium.models.page_objects.products_page import ProductPage
-from Lesson6.selenium.log.log_to_file_listener import TestListener
-
-
-# server = Server(r"D:\browsermob\browsermob-proxy-2.1.4\bin\browsermob-proxy")
-# server.start()
-#
-# proxy = server.create_proxy()
-# proxy.new_har()
-
-
-# @pytest.mark.usefixtures("environment_info")
-# @pytest.fixture(scope='session', autouse=True)
-# def configure_html_report_env(request, environment_info):
-#     request.config._metadata.update(
-#         {"browser": request.config.getoption("--browser"),
-#          "address": request.config.getoption("--address"),
-#          "os_platform": environment_info[0],
-#          "system": environment_info[1]})
-#     yield
-#
-#
-# @pytest.fixture(scope="session")
-# def environment_info():
-#     os_platform = platform.platform()
-#     system = platform.system()
-#     return os_platform, system
 
 
 def pytest_addoption(parser):
@@ -47,7 +18,6 @@ def pytest_addoption(parser):
     parser.addoption("--wait", action="store", default=10, help="Implicity wait")
 
 
-#@allure.title("Getting browser")
 @pytest.fixture(scope="session", autouse=True)
 def driver(request):
     """Getting driver according to command line option"""
@@ -66,16 +36,15 @@ def driver(request):
                                                     capabilities=capabilities), TestListenerDb())
         wd.maximize_window()
     elif browser == 'chrome':
-        chrome_options = webdriver.ChromeOptions()
+        #chrome_options = webdriver.ChromeOptions()
         # url = urllib.parse.urlparse(proxy.proxy).path
         # chrome_options.add_argument('--proxy-server=%s' % url)
-        capabilities = webdriver.DesiredCapabilities.CHROME.copy()
+        capabilities = webdriver.DesiredCapabilities.CHROME
         capabilities['acceptSslCerts'] = True
         capabilities['acceptInsecureCerts'] = True
         capabilities['loggingPrefs'] = {'performance': 'ALL'}
         driver = webdriver.Chrome(desired_capabilities=capabilities,
-                                  executable_path="/home/ksenia/tools/chromedriver",
-                                  options=chrome_options)
+                                  executable_path="/home/ksenia/tools/chromedriver")
         driver.implicitly_wait(wait)
         driver.maximize_window()
         wd = EventFiringWebDriver(driver, TestListenerDb())
@@ -87,17 +56,11 @@ def driver(request):
 
 
 @pytest.fixture
-#@allure.title("Opening login page anf returning it")
 def open_login_page(driver, request):
     """Opening admin login page"""
     url = 'opencart/admin/'
     driver.get("".join([request.config.getoption("--address"), url]))
     return LoginPage(driver)
-
-#
-# @pytest.fixture(params=[("admin", "admin")])
-# def param_test(request):
-#     return request.param[0], request[1]
 
 
 @pytest.fixture
