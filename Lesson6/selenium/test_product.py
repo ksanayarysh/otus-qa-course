@@ -1,4 +1,4 @@
-"""Тесты"""
+"""Tests"""
 import os
 
 import pytest
