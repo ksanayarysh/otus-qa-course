@@ -1,4 +1,3 @@
-from time import sleep
 import pytest
 
 @pytest.mark.login_with_different_creds
@@ -14,5 +13,4 @@ class TestLoginPage:
         pytest.param("admin", "admin", True, id='right'),
     ])
     def test_login(self, driver, user, password, expected):
-        sleep(5)
-        assert ("dashboard" in driver.current_url) == expected
+        assert ("Dashboard".lower() in driver.title.lower()) == expected
