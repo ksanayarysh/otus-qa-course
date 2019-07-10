@@ -3,6 +3,12 @@ pipeline {
 		docker {image "docker-otus"}
 	}
 	stages {
+		stage('Check') {
+			steps {
+				echo params["address"]
+				echo params["browser"]
+			}
+		}
         	stage('Build') {
             		steps {
                 		sh "pytest Lesson6/selenium -q --address=" + params['address'] + " --browser=" + params['browser']
