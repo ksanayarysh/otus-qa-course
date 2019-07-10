@@ -1,12 +1,15 @@
 pipeline {
-	agent {
-		docker {image "docker-otus"}
-	}
+	agent none
 	stages {
 		stage('Check') {
 			steps {
 				echo params["address"]
 				echo params["browser"]
+			}
+		}
+		stage('Make docker') {
+			steps {
+				sh "docker run -it docker-otus"	
 			}
 		}
         	stage('Pytest') {
