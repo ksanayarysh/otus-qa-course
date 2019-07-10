@@ -1,12 +1,12 @@
 pipeline {
 	agent {
 		docker {image "docker_otus"}
-	} 
+	}
 	stages {
 		stage ("First")
 			steps{
 			    sh "echo some"
-			
+
 		}
 	}
 }
