@@ -45,7 +45,7 @@ def driver(request):
         chrome_options.add_argument('--headless')
         chrome_options.add_argument('--disable-gpu')
         driver = webdriver.Chrome(options=chrome_options,
-                                  executable_path="/home/ksenia/tools/chromedriver")
+                                  executable_path="/usr/local/bin/chromedriver")
 
         driver.implicitly_wait(wait)
         driver.maximize_window()
