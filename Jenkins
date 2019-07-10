@@ -1,5 +1,7 @@
 pipeline {
-	agent none
+	agent 	agent {
+		docker {image "docker-otus"}
+	}
 	stages {
 		stage('Check') {
 			steps {
@@ -7,11 +9,7 @@ pipeline {
 				echo params["browser"]
 			}
 		}
-		stage('Make docker') {
-			steps {
-				sh "docker run -it docker-otus"	
-			}
-		}
+		
         	stage('Pytest') {
             		steps {
                 		sh "pytest --alluredir=reports Lesson6/selenium/test_login_page.py -q --address=" + params['address'] + " --browser=" + params['browser']
@@ -21,7 +19,6 @@ pipeline {
 	post {
         always {
             archiveArtifacts artifacts: 'reports/*.*', fingerprint: true
-	    sh "docker cp docker-otus:/otus_qa_course/reports /home/ksenia/work/rep"
         }
     }
 }
